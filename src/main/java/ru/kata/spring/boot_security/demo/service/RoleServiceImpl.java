@@ -1,11 +1,14 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -19,38 +22,32 @@ public class RoleServiceImpl implements RoleService{
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Role> getAllRoles() {
-        return roleRepository.getAllRoles();
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Role getRoleByName(String name) {
-        return roleRepository.getRoleByName(name);
+        return roleRepository.findByName(name)
+                .orElseThrow(() -> new UsernameNotFoundException("Role not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Set<Role> getSetOfRoles(String[] roleNames) {
-        return roleRepository.getSetOfRoles(roleNames);
+        Set<Role> roleSet = new HashSet<>();
+        for (String role : roleNames) {
+            roleSet.add(getRoleByName(role));
+        }
+
+        return roleSet;
     }
 
     @Override
     @Transactional
     public void add(Role role) {
-        roleRepository.add(role);
+        roleRepository.save(role);
     }
 
-    @Override
-    @Transactional
-    public void update(Role role) {
-        roleRepository.update(role);
-
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Role getById(Long id) {
-        return roleRepository.getById(id);
-    }
 }

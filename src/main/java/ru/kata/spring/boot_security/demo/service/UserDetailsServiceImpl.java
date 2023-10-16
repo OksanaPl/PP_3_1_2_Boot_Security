@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.userdetails.UserDetailsImpl;
-import java.util.Objects;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,11 +23,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String bankAccount) throws UsernameNotFoundException {
-        User user = userRepository.getUserByBankAccount(bankAccount);
-        if (Objects.isNull(user)) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return new UserDetailsImpl(user);
+        User user = userRepository.findByBankAccount(bankAccount)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        return new UserDetailsImpl(user);
     }
 }

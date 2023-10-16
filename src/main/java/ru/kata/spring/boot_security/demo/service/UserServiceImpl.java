@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,27 +20,28 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User getUserByBankAccount(String bankAccount) {
-        return userRepository.getUserByBankAccount(bankAccount);
+        return userRepository.findByBankAccount(bankAccount)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
     @Transactional
     public void addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.addUser(user);
+        userRepository.save(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public User getUserById(Long id) {
-       return userRepository.getUserById(id);
+       return userRepository.getById(id);
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.updateUser(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<User> listUsers() {
-        return userRepository.getAllUsers();
+        return userRepository.findAll();
     }
 
 }
