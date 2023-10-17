@@ -1,28 +1,86 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
-
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
-    <title>User</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>User page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="js/main.js"></script>
 </head>
 <body>
-    <h1>Your account</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" style="height: 3rem">
+                <div class="navbar-brand col-sm-4 col-md-3 px-3 mt-0">
+                    <b th:text="${user.bankAccount}"></b>
+                    <span>with roles: </span>
+                    <span th:each="role : ${user.roles}"   th:text="${role.name}">role
+                    </span>
+                </div>
+                <ul class="navbar-nav px-3">
+                    <form th:action="@{/logout}" method="post">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="text-muted btn btn-dark" type="submit">Logout</button>
+                        </div>
+                    </form>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    </br></br></br>
+    <div class="row">
+        <div class="col-2">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                <a class="nav-link active" id="v-pills-tab1-tab" data-toggle="pill" role="tab"
+                   aria-controls="v-pills-tab1" aria-expanded="true">USER</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-tab1" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <h2>User information-page</h2>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                             aria-labelledby="nav-home-tab">
+                            <div class="card">
+                                <h5 class="card-header">About user</h5>
+                                <div class="card-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>First name</th>
+                                            <th>Last name</th>
+                                            <th>Bank account</th>
+                                            <th>Role</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th th:text="${user.id}" scope="row"></th>
+                                            <td th:text="${user.firstName}"></td>
+                                            <td th:text="${user.lastName}"></td>
+                                            <td th:text="${user.bankAccount}"></td>
+                                            <td th:each="role : ${user.roles}"
+                                                th:text="${role.name}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table>
-    <tbody>
-    <tr>
-        <td th:utext="${user.getId()}">id</td>
-        <td th:utext="${user.getFirstName()}">Firstname</td>
-        <td th:utext="${user.getLastName()}">Lastname</td>
-        <td th:utext="${user.getBankAccount()}">Bank Account</td>
-    </tr>
-    </tbody>
-</table>
-<br>
-<form th:action="@{/admin}">
-    <button type="submit">Back</button>
-</form>
-<form th:action="@{'/logout'}">
-    <input type="submit" value="Logout"/>
-</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
