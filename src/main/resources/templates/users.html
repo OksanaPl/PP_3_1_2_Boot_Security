@@ -26,7 +26,6 @@
 
             <td>
                 <form th:action="@{/admin/users/update/{id}(id=${user.getId()})}" th:object="${user}">
-<!--                    <input type="hidden" name="id" th:value="${user.getId()}">-->
                     <button style="background: mintcream" type="submit">Update</button>
                 </form>
             </td>

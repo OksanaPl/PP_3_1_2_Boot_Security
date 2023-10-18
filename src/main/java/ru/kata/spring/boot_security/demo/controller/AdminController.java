@@ -14,6 +14,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -41,8 +43,8 @@ public class AdminController {
 
     @PostMapping("/users/update/{id}")
     public String update(@ModelAttribute("user") User user,
-                         @RequestParam(value = "roles") String[] roles) {
-        user.setRoles(roleService.getSetOfRoles(roles));
+                         @RequestParam(value = "roles") List<Long> idList) {
+        user.setRoles(roleService.getSetOfRoles(idList));
         userService.updateUser(user);
         return "redirect:/admin/users";
     }
@@ -55,8 +57,8 @@ public class AdminController {
 
     @PostMapping(value = "/users/add")
     public String createNewUser(@ModelAttribute("user") User user,
-                                @RequestParam(value = "roles") String[] roles) {
-        user.setRoles(roleService.getSetOfRoles(roles));
+                                @RequestParam(value = "roles") List<Long> idList) {
+        user.setRoles(roleService.getSetOfRoles(idList));
         userService.addUser(user);
         return "redirect:/admin/users";
     }

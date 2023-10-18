@@ -28,17 +28,17 @@ public class RoleServiceImpl implements RoleService{
 
     @Override
     @Transactional(readOnly = true)
-    public Role getRoleByName(String name) {
-        return roleRepository.findByName(name)
+    public Role getRoleById(Long id) {
+        return roleRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Role not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Role> getSetOfRoles(String[] roleNames) {
+    public Set<Role> getSetOfRoles(List<Long> idList) {
         Set<Role> roleSet = new HashSet<>();
-        for (String role : roleNames) {
-            roleSet.add(getRoleByName(role));
+        for (Long id : idList) {
+            roleSet.add(getRoleById(id));
         }
 
         return roleSet;
