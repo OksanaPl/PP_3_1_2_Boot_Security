@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,10 +60,6 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
     public User(){}
 
     public User(String firstName, String lastName, String bankAccount) {
@@ -115,7 +112,12 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(bankAccount, user.bankAccount) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
+        return Objects.equals(id, user.id) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(bankAccount, user.bankAccount) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(roles, user.roles);
     }
 
     @Override

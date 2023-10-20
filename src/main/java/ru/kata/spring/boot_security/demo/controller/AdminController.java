@@ -1,52 +1,74 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.kata.spring.boot_security.demo.Exception.CannotExecuteActionException;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
-import ru.kata.spring.boot_security.demo.userdetails.UserDetailsImpl;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/api/rest")
+
 public class AdminController {
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @GetMapping()
+    public ResponseEntity<List<User>> getAllUsers() {
+        final List<User> allUsers = userService.listUsers();
+        return allUsers != null && !allUsers.isEmpty()
+                ? ResponseEntity.ok(allUsers)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-    @GetMapping
-    public String getAllUsers(Model model,
-                        Authentication authentication) {
-        model.addAttribute("users", userService.listUsers());
-        var user = authentication.getPrincipal();
-        Long id = ((UserDetailsImpl) user).getUser().getId();
-        model.addAttribute("userA", userService.getUserById(id));
-        model.addAttribute("userC", new User());
-        return "index";
+    @GetMapping("/{id}")
+    public ResponseEntity <User> getUserById (@PathVariable ("id") Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    public String create(@ModelAttribute("userC") User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    public ResponseEntity<User> addUser (@RequestBody User user) {
         userService.addUser(user);
-        return "redirect:/admin";
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping("edit/{id}")
-    public String update(@ModelAttribute("user") User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    @PutMapping
+    public ResponseEntity<User> editUser (@RequestBody User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField())
+                        .append(" - ")
+                        .append(error.getDefaultMessage())
+                        .append(";");
+            }
+            throw new CannotExecuteActionException(errorMsg.toString());
+        }
         userService.updateUser(user);
-        return "redirect:/admin";
+        return ResponseEntity.ok(user);
     }
 
-    @PostMapping("delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser (@PathVariable ("id") Long id) {
+
         userService.deleteById(id);
-        return "redirect:/admin";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
+

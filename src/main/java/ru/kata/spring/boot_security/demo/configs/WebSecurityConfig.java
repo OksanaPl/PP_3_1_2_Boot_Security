@@ -36,8 +36,9 @@ protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index", "/login", "/error").permitAll() //"/admin/**", "/user/**",
+                .antMatchers("/", "/index", "/login", "/error").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()

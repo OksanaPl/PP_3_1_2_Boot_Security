@@ -1,12 +1,12 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +30,7 @@ public class RoleServiceImpl implements RoleService{
     @Transactional(readOnly = true)
     public Role getRoleByName(String name) {
         return roleRepository.findByName(name)
-                .orElseThrow(() -> new UsernameNotFoundException("Role not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
     }
 
     @Override
