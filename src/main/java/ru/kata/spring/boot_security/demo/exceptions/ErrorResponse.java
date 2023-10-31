@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.Exception;
+package ru.kata.spring.boot_security.demo.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

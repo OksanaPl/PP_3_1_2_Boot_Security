@@ -1,20 +1,26 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.Exception.UserNotFoundException;
+import ru.kata.spring.boot_security.demo.exceptions.UserNotFoundException;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
 
-@Component
+@Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    @Primary
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder(12);
+    }
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -31,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(User user) {
-        user.setPassword(getPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -49,7 +55,7 @@ public class UserServiceImpl implements UserService {
         updated.setBankAccount(user.getBankAccount());
         updated.setFirstName(user.getFirstName());
         updated.setLastName(user.getLastName());
-        updated.setPassword(getPasswordEncoder().encode(user.getPassword()));
+        updated.setPassword(bCryptPasswordEncoder().encode(user.getPassword()));
         updated.setRoles(user.getRoles());
         userRepository.save(updated);
     }
@@ -74,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private BCryptPasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    private BCryptPasswordEncoder getPasswordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 }

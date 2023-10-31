@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.kata.spring.boot_security.demo.Exception.CannotExecuteActionException;
-import ru.kata.spring.boot_security.demo.Exception.ErrorResponse;
-import ru.kata.spring.boot_security.demo.Exception.UserNotFoundException;
+import ru.kata.spring.boot_security.demo.exceptions.CannotExecuteActionException;
+import ru.kata.spring.boot_security.demo.exceptions.ErrorResponse;
+import ru.kata.spring.boot_security.demo.exceptions.UserNotFoundException;
 
 import java.time.LocalDateTime;
 
