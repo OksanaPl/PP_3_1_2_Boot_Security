@@ -65,7 +65,6 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser (@PathVariable ("id") Long id) {
-
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
